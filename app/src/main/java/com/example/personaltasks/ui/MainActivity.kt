@@ -61,7 +61,8 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     }
 
     override fun onRemoveTask(position: Int) {
-        TODO("Not yet implemented")
+        taskList.removeAt(position)
+        taskAdapter.notifyItemRemoved(position)
     }
 
     private fun fillTaskList(){
