@@ -23,29 +23,15 @@ class TaskActivity : AppCompatActivity() {
         setSupportActionBar(atb.toolbarIn.toolbar)
         supportActionBar?.subtitle = "New task"
 
-        val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(EXTRA_TASK, Task::class.java)
-        } else {
-            intent.getParcelableExtra(EXTRA_TASK)
-        }
+        val task = getTaskFromIntent()
         task?.let {
             supportActionBar?.subtitle = "Edit task"
             with(atb) {
-                titleEt.setText(it.title)
-                descriptionEt.setText(it.description)
-                dueDateDp.updateDate(
-                    it.dueDate.year,
-                    it.dueDate.monthValue - 1,
-                    it.dueDate.dayOfMonth
-                )
+                setFormFieldsWithTaskValues(it)
 
-                val isViewMode = intent.getBooleanExtra(EXTRA_VIEW_TASK, false)
-                if (isViewMode) {
+                if (isViewMode()) {
                     supportActionBar?.subtitle = "View task"
-                    titleEt.isEnabled = false
-                    descriptionEt.isEnabled = false
-                    dueDateDp.isEnabled = false
-                    saveBt.visibility = View.GONE
+                    activateViewMode()
                 }
             }
         }
@@ -70,5 +56,30 @@ class TaskActivity : AppCompatActivity() {
         atb.cancelBt.setOnClickListener {
             finish()
         }
+    }
+
+    private fun getTaskFromIntent() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        intent.getParcelableExtra(EXTRA_TASK, Task::class.java)
+    } else {
+        intent.getParcelableExtra(EXTRA_TASK)
+    }
+
+    private fun ActivityTaskBinding.setFormFieldsWithTaskValues(task: Task) {
+        titleEt.setText(task.title)
+        descriptionEt.setText(task.description)
+        dueDateDp.updateDate(
+            task.dueDate.year,
+            task.dueDate.monthValue - 1,
+            task.dueDate.dayOfMonth
+        )
+    }
+
+    private fun isViewMode() = intent.getBooleanExtra(EXTRA_VIEW_TASK, false)
+
+    private fun ActivityTaskBinding.activateViewMode() {
+        titleEt.isEnabled = false
+        descriptionEt.isEnabled = false
+        dueDateDp.isEnabled = false
+        saveBt.visibility = View.GONE
     }
 }

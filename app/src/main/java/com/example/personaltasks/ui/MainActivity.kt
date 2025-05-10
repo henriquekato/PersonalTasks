@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         TaskController(this)
     }
 
-    private lateinit var arl: ActivityResultLauncher<Intent>
+    private lateinit var createTaskArl: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,25 +41,16 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
 
         setSupportActionBar(amb.toolbarIn.toolbar)
 
-        arl =
+        createTaskArl =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getParcelableExtra(EXTRA_TASK, Task::class.java)
-                    } else {
-                        result.data?.getParcelableExtra(EXTRA_TASK)
-                    }
+                    val task = getTaskFromIntent(result)
                     task?.let { receivedTask ->
-                        val position = taskList.indexOfFirst { it.id == receivedTask.id }
-
-                        if (position == -1) {
-                            taskController.createTask(receivedTask)
-                            taskList.add(receivedTask)
-                            taskAdapter.notifyItemInserted(taskList.lastIndex)
+                        val position = taskList.indexOfFirst { it.id == task.id }
+                        if (isInList(position)) {
+                            updateTask(receivedTask, position)
                         } else {
-                            taskController.updateTask(receivedTask)
-                            taskList[position] = receivedTask
-                            taskAdapter.notifyItemChanged(position)
+                            createTask(receivedTask)
                         }
                     }
                 }
@@ -70,6 +62,29 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         fillTaskList()
     }
 
+    private fun getTaskFromIntent(result: ActivityResult) =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            result.data?.getParcelableExtra(EXTRA_TASK, Task::class.java)
+        } else {
+            result.data?.getParcelableExtra(EXTRA_TASK)
+        }
+
+    private fun isInList(position: Int): Boolean{
+        return position == -1
+    }
+
+    private fun createTask(receivedTask: Task) {
+        taskController.createTask(receivedTask)
+        taskList.add(receivedTask)
+        taskAdapter.notifyItemInserted(taskList.lastIndex)
+    }
+
+    private fun updateTask(receivedTask: Task, position: Int) {
+        taskController.updateTask(receivedTask)
+        taskList[position] = receivedTask
+        taskAdapter.notifyItemChanged(position)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
         return true
@@ -78,7 +93,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_task_mi -> {
-                arl.launch(Intent(this, TaskActivity::class.java))
+                createTaskArl.launch(Intent(this, TaskActivity::class.java))
                 true
             }
             else -> {
@@ -98,7 +113,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     override fun onEditTask(position: Int) {
         Intent(this, TaskActivity::class.java).apply {
             putExtra(EXTRA_TASK, taskList[position])
-            arl.launch(this)
+            createTaskArl.launch(this)
         }
     }
 
