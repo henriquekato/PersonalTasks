@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     private val taskList: MutableList<Task> = mutableListOf()
 
     private val taskAdapter: TaskRvAdapter by lazy {
-        TaskRvAdapter(taskList)
+        TaskRvAdapter(taskList, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
