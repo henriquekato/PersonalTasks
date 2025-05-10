@@ -6,6 +6,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.personaltasks.databinding.TileTaskBinding
 import com.example.personaltasks.model.Task
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class TaskRvAdapter(
     private val taskList: MutableList<Task>
@@ -33,7 +35,8 @@ class TaskRvAdapter(
             with(holder) {
                 titleTv.text = task.title
                 descriptionTv.text = task.description
-                dueDateTv.text = task.dueDate.toString()
+                dueDateTv.text = task.dueDate.format(DateTimeFormatter.ofLocalizedDate
+                    (FormatStyle.MEDIUM))
             }
         }
     }
