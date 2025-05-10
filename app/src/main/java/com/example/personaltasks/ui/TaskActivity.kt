@@ -21,7 +21,7 @@ class TaskActivity : AppCompatActivity() {
         setContentView(atb.root)
 
         setSupportActionBar(atb.toolbarIn.toolbar)
-        supportActionBar?.subtitle = "New contact"
+        supportActionBar?.subtitle = "New task"
 
         val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(EXTRA_TASK, Task::class.java)
@@ -57,9 +57,9 @@ class TaskActivity : AppCompatActivity() {
                     titleEt.text.toString(),
                     descriptionEt.text.toString(),
                     LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth)
-                ).let { contact ->
+                ).let { task ->
                     Intent().apply {
-                        putExtra(EXTRA_TASK, contact)
+                        putExtra(EXTRA_TASK, task)
                         setResult(RESULT_OK, this)
                     }
                 }
