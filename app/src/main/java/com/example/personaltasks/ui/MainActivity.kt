@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     private fun fillTaskList(){
         taskList.clear()
         for (i in 0..20){
-            taskList.add(Task("Task $i", "Description $i", LocalDate.now().plusDays(i.toLong())))
+            taskList.add(Task(i, "Task $i", "Description $i", LocalDate.now().plusDays(i.toLong())))
         }
         taskAdapter.notifyDataSetChanged()
     }
