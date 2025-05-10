@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.personaltasks.databinding.ActivityTaskBinding
 import com.example.personaltasks.ui.Extras.EXTRA_TASK
@@ -22,6 +23,8 @@ class TaskActivity : AppCompatActivity() {
 
         setSupportActionBar(atb.toolbarIn.toolbar)
         supportActionBar?.subtitle = "New task"
+
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         val task = getTaskFromIntent()
         task?.let {
