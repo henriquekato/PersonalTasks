@@ -53,7 +53,7 @@ class TaskActivity : AppCompatActivity() {
         with(atb) {
             saveBt.setOnClickListener {
                 Task(
-                    hashCode(),
+                    task?.id ?: hashCode(),
                     titleEt.text.toString(),
                     descriptionEt.text.toString(),
                     LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth)

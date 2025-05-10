@@ -42,11 +42,18 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
                     val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         result.data?.getParcelableExtra(EXTRA_TASK, Task::class.java)
                     } else {
-                        result.data?.getParcelableExtra<Task>(EXTRA_TASK)
+                        result.data?.getParcelableExtra(EXTRA_TASK)
                     }
                     task?.let { receivedTask ->
-                        taskList.add(receivedTask)
-                        taskAdapter.notifyItemInserted(taskList.lastIndex)
+                        val position = taskList.indexOfFirst { it.id == receivedTask.id }
+
+                        if (position == -1) {
+                            taskList.add(receivedTask)
+                            taskAdapter.notifyItemInserted(taskList.lastIndex)
+                        } else {
+                            taskList[position] = receivedTask
+                            taskAdapter.notifyItemChanged(position)
+                        }
                     }
                 }
             }
@@ -83,7 +90,10 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     }
 
     override fun onEditTask(position: Int) {
-        TODO("Not yet implemented")
+        Intent(this, TaskActivity::class.java).apply {
+            putExtra(EXTRA_TASK, taskList[position])
+            arl.launch(this)
+        }
     }
 
     override fun onRemoveTask(position: Int) {
@@ -91,9 +101,9 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         taskAdapter.notifyItemRemoved(position)
     }
 
-    private fun fillTaskList(){
+    private fun fillTaskList() {
         taskList.clear()
-        for (i in 0..20){
+        for (i in 0..20) {
             taskList.add(Task(i, "Task $i", "Description $i", LocalDate.now().plusDays(i.toLong())))
         }
         taskAdapter.notifyDataSetChanged()
