@@ -12,7 +12,7 @@ import com.example.personaltasks.databinding.ActivityMainBinding
 import com.example.personaltasks.model.Task
 import java.time.LocalDate
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnTaskClickListener {
     private val amb: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -50,6 +50,18 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         }
+    }
+
+    override fun onViewTask(position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onEditTask(position: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRemoveTask(position: Int) {
+        TODO("Not yet implemented")
     }
 
     private fun fillTaskList(){
