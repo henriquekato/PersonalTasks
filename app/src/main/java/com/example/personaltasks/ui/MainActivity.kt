@@ -1,9 +1,12 @@
 package com.example.personaltasks.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.personaltasks.R
@@ -24,11 +27,28 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         TaskRvAdapter(taskList, this)
     }
 
+    private lateinit var arl: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(amb.root)
 
         setSupportActionBar(amb.toolbarIn.toolbar)
+
+        arl =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val task = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        result.data?.getParcelableExtra(EXTRA_TASK, Task::class.java)
+                    } else {
+                        result.data?.getParcelableExtra<Task>(EXTRA_TASK)
+                    }
+                    task?.let { receivedTask ->
+                        taskList.add(receivedTask)
+                        taskAdapter.notifyItemInserted(taskList.lastIndex)
+                    }
+                }
+            }
 
         amb.taskRv.adapter = taskAdapter
         amb.taskRv.layoutManager = LinearLayoutManager(this)
@@ -44,7 +64,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_task_mi -> {
-                startActivity(Intent(this, TaskActivity::class.java))
+                arl.launch(Intent(this, TaskActivity::class.java))
                 true
             }
             else -> {
