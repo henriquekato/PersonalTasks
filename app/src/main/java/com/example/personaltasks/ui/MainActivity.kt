@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         }
 
     private fun isInList(position: Int): Boolean{
-        return position == -1
+        return position != -1
     }
 
     private fun createTask(receivedTask: Task) {
