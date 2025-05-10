@@ -37,5 +37,9 @@ class TaskActivity : AppCompatActivity() {
                 saveBt.visibility = View.GONE
             }
         }
+
+        atb.cancelBt.setOnClickListener {
+            finish()
+        }
     }
 }
