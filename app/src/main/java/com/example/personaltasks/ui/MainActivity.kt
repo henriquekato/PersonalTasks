@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.personaltasks.R
 import com.example.personaltasks.adapter.TaskRvAdapter
 import com.example.personaltasks.databinding.ActivityMainBinding
+import com.example.personaltasks.model.Constant.EXTRA_TASK
 import com.example.personaltasks.model.Task
 import java.time.LocalDate
 
@@ -53,7 +54,10 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     }
 
     override fun onViewTask(position: Int) {
-        TODO("Not yet implemented")
+        Intent(this, TaskActivity::class.java).apply {
+            putExtra(EXTRA_TASK, taskList[position])
+            startActivity(this)
+        }
     }
 
     override fun onEditTask(position: Int) {
