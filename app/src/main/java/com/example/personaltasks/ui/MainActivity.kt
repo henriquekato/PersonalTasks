@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.personaltasks.R
 import com.example.personaltasks.adapter.TaskRvAdapter
 import com.example.personaltasks.databinding.ActivityMainBinding
-import com.example.personaltasks.model.Constant.EXTRA_TASK
-import com.example.personaltasks.model.Constant.EXTRA_VIEW_TASK
+import com.example.personaltasks.ui.Extras.EXTRA_TASK
+import com.example.personaltasks.ui.Extras.EXTRA_VIEW_TASK
 import com.example.personaltasks.model.Task
 import java.time.LocalDate
 
