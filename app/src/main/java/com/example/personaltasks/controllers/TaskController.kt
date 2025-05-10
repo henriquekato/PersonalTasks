@@ -18,13 +18,17 @@ class TaskController(mainActivity: MainActivity) {
             taskDao.createTask(task)
         }.start()
     }
+
     fun retrieveTask(id: Int) = taskDao.retrieveTask(id)
+
     fun retrieveTasks() = taskDao.retrieveTasks()
+
     fun updateTask(task: Task) {
         Thread {
             taskDao.updateTask(task)
         }.start()
     }
+
     fun deleteTask(task: Task) {
         Thread {
             taskDao.deleteTask(task)

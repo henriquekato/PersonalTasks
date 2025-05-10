@@ -23,8 +23,9 @@ class TaskRvAdapter(
 
         init {
             tcb.root.setOnCreateContextMenuListener{ menu, v, menuInfo ->
-                (onTaskClickListener as AppCompatActivity).menuInflater.inflate(R.menu
-                    .context_menu_task, menu)
+                (onTaskClickListener as AppCompatActivity).menuInflater
+                    .inflate(R.menu.context_menu_task, menu)
+
                 menu.findItem(R.id.view_task_mi).setOnMenuItemClickListener {
                     onTaskClickListener.onViewTask(adapterPosition)
                     true
@@ -58,12 +59,11 @@ class TaskRvAdapter(
             with(holder) {
                 titleTv.text = task.title
                 descriptionTv.text = task.description
-                dueDateTv.text = task.dueDate.format(DateTimeFormatter.ofLocalizedDate
-                    (FormatStyle.MEDIUM))
+                dueDateTv.text = task.dueDate
+                    .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
             }
         }
     }
 
     override fun getItemCount(): Int = taskList.size
-
 }
