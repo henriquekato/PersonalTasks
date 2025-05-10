@@ -11,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.personaltasks.R
 import com.example.personaltasks.adapter.TaskRvAdapter
+import com.example.personaltasks.controllers.TaskController
 import com.example.personaltasks.databinding.ActivityMainBinding
 import com.example.personaltasks.ui.Extras.EXTRA_TASK
 import com.example.personaltasks.ui.Extras.EXTRA_VIEW_TASK
 import com.example.personaltasks.model.Task
-import java.time.LocalDate
 
 class MainActivity : AppCompatActivity(), OnTaskClickListener {
     private val amb: ActivityMainBinding by lazy {
@@ -26,6 +26,10 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
 
     private val taskAdapter: TaskRvAdapter by lazy {
         TaskRvAdapter(taskList, this)
+    }
+
+    private val taskController: TaskController by lazy {
+        TaskController(this)
     }
 
     private lateinit var arl: ActivityResultLauncher<Intent>
@@ -48,9 +52,11 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
                         val position = taskList.indexOfFirst { it.id == receivedTask.id }
 
                         if (position == -1) {
+                            taskController.createTask(receivedTask)
                             taskList.add(receivedTask)
                             taskAdapter.notifyItemInserted(taskList.lastIndex)
                         } else {
+                            taskController.updateTask(receivedTask)
                             taskList[position] = receivedTask
                             taskAdapter.notifyItemChanged(position)
                         }
@@ -97,15 +103,16 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     }
 
     override fun onRemoveTask(position: Int) {
+        taskController.deleteTask(taskList[position])
         taskList.removeAt(position)
         taskAdapter.notifyItemRemoved(position)
     }
 
     private fun fillTaskList() {
         taskList.clear()
-        for (i in 0..20) {
-            taskList.add(Task(i, "Task $i", "Description $i", LocalDate.now().plusDays(i.toLong())))
-        }
-        taskAdapter.notifyDataSetChanged()
+        Thread {
+            taskList.addAll(taskController.retrieveTasks())
+            taskAdapter.notifyDataSetChanged()
+        }.start()
     }
 }
