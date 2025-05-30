@@ -34,5 +34,4 @@ class TaskController(mainActivity: MainActivity) {
             taskDao.deleteTask(task)
         }.start()
     }
-
 }
