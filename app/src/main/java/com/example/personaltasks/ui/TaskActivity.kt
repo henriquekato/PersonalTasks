@@ -45,7 +45,8 @@ class TaskActivity : AppCompatActivity() {
                     task?.id ?: hashCode(),
                     titleEt.text.toString(),
                     descriptionEt.text.toString(),
-                    LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth)
+                    LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth),
+                    isDoneCb.isChecked
                 ).let { task ->
                     Intent().apply {
                         putExtra(EXTRA_TASK, task)
@@ -75,6 +76,7 @@ class TaskActivity : AppCompatActivity() {
             task.dueDate.monthValue - 1,
             task.dueDate.dayOfMonth
         )
+        isDoneCb.isChecked = task.isDone
     }
 
     private fun isViewMode() = intent.getBooleanExtra(EXTRA_VIEW_TASK, false)
@@ -84,5 +86,6 @@ class TaskActivity : AppCompatActivity() {
         descriptionEt.isEnabled = false
         dueDateDp.isEnabled = false
         saveBt.visibility = View.GONE
+        isDoneCb.isEnabled = false
     }
 }

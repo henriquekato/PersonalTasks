@@ -20,6 +20,7 @@ class TaskRvAdapter(
         val titleTv: TextView = tcb.titleTv
         val descriptionTv: TextView = tcb.descriptionTv
         val dueDateTv: TextView = tcb.dueDateTv
+        val isDoneTv: TextView = tcb.isDoneTv
 
         init {
             tcb.root.setOnCreateContextMenuListener{ menu, v, menuInfo ->
@@ -61,6 +62,8 @@ class TaskRvAdapter(
                 descriptionTv.text = task.description
                 dueDateTv.text = task.dueDate
                     .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                isDoneTv.text = "Not done"
+                if(task.isDone) isDoneTv.text = "Done"
             }
         }
     }
