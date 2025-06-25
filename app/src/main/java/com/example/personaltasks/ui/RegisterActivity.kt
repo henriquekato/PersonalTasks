@@ -24,24 +24,21 @@ class RegisterActivity : AppCompatActivity() {
 
         arb.signUpBt.setOnClickListener {
             val signUpCoroutineScope = CoroutineScope(Dispatchers.IO)
-
             signUpCoroutineScope.launch {
                 Firebase.auth.createUserWithEmailAndPassword(
                     arb.emailRegisterEt.text.toString(),
                     arb.passwordRegisterEt.text.toString()
-                ).addOnCompleteListener{
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        "Registered successfully",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    finish()
-                }.addOnFailureListener{
-                    Toast.makeText(
-                        this@RegisterActivity,
+                ).addOnFailureListener {
+                    Toast.makeText(this@RegisterActivity,
                         "Registration failed",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        Toast.LENGTH_SHORT)
+                    .show()
+                }.addOnSuccessListener {
+                    Toast.makeText(this@RegisterActivity,
+                        "Registered successfully",
+                        Toast.LENGTH_SHORT)
+                    .show()
+                    finish()
                 }
             }
         }
