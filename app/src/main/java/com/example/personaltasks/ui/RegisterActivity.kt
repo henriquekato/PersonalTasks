@@ -1,12 +1,18 @@
 package com.example.personaltasks.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.personaltasks.R
 import com.example.personaltasks.databinding.ActivityRegisterBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private val arb: ActivityRegisterBinding by lazy {
@@ -19,5 +25,29 @@ class RegisterActivity : AppCompatActivity() {
 
         setSupportActionBar(arb.toolbarIn.toolbar)
         supportActionBar?.subtitle = "Register"
+
+        arb.signUpBt.setOnClickListener {
+            val signUpCoroutineScope = CoroutineScope(Dispatchers.IO)
+
+            signUpCoroutineScope.launch {
+                Firebase.auth.createUserWithEmailAndPassword(
+                    arb.emailRegisterEt.text.toString(),
+                    arb.passwordRegisterEt.text.toString()
+                ).addOnCompleteListener{
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Registered successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    finish()
+                }.addOnFailureListener{
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Registration failed",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 }
