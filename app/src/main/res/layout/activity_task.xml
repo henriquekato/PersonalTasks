@@ -41,6 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title_et"
+            app:layout_constraintBottom_toTopOf="@+id/due_date_dp"
             android:layout_marginTop="10dp"/>
 
         <DatePicker
@@ -50,8 +51,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description_et"
+            app:layout_constraintBottom_toTopOf="@+id/is_done_cb"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"/>
+
+        <CheckBox
+            android:id="@+id/is_done_cb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Is done"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/due_date_dp" />
 
         <Button
             android:id="@+id/save_bt"
@@ -60,7 +71,7 @@
             android:text="@string/save"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/cancel_bt"
-            app:layout_constraintTop_toBottomOf="@+id/due_date_dp" />
+            app:layout_constraintTop_toBottomOf="@+id/is_done_cb" />
 
         <Button
             android:id="@+id/cancel_bt"
@@ -69,7 +80,7 @@
             android:text="@string/cancel"
             app:layout_constraintLeft_toRightOf="@+id/save_bt"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/due_date_dp" />
+            app:layout_constraintTop_toBottomOf="@+id/is_done_cb" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
