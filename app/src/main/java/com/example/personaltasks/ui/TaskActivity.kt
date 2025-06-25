@@ -46,7 +46,8 @@ class TaskActivity : AppCompatActivity() {
                     titleEt.text.toString(),
                     descriptionEt.text.toString(),
                     LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth),
-                    isDoneCb.isChecked
+                    isDoneCb.isChecked,
+                    false
                 ).let { task ->
                     Intent().apply {
                         putExtra(EXTRA_TASK, task)
