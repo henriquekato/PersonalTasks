@@ -45,7 +45,7 @@ class TaskActivity : AppCompatActivity() {
                     task?.id ?: hashCode(),
                     titleEt.text.toString(),
                     descriptionEt.text.toString(),
-                    LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth),
+                    LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth).toString(),
                     isDoneCb.isChecked,
                     false
                 ).let { task ->
@@ -72,10 +72,11 @@ class TaskActivity : AppCompatActivity() {
     private fun ActivityTaskBinding.setFormFieldsWithTaskValues(task: Task) {
         titleEt.setText(task.title)
         descriptionEt.setText(task.description)
+        val localDate = LocalDate.parse(task.dueDate)
         dueDateDp.updateDate(
-            task.dueDate.year,
-            task.dueDate.monthValue - 1,
-            task.dueDate.dayOfMonth
+            localDate.year,
+            localDate.monthValue - 1,
+            localDate.dayOfMonth
         )
         isDoneCb.isChecked = task.isDone
     }
