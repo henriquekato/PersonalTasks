@@ -3,6 +3,9 @@ package com.example.personaltasks.ui
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResult
@@ -17,6 +20,9 @@ import com.example.personaltasks.databinding.ActivityMainBinding
 import com.example.personaltasks.ui.Extras.EXTRA_TASK
 import com.example.personaltasks.ui.Extras.EXTRA_VIEW_TASK
 import com.example.personaltasks.model.Task
+import com.example.personaltasks.ui.Extras.EXTRA_TASK_ARRAY
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity(), OnTaskClickListener {
     private val amb: ActivityMainBinding by lazy {
@@ -34,6 +40,32 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
     }
 
     private lateinit var createTaskArl: ActivityResultLauncher<Intent>
+
+    companion object {
+        const val GET_TASKS_MESSAGE = 1
+        const val GET_CONTACTS_INTERVAL = 2000L
+    }
+
+    val getTasksHandler = object: Handler(Looper.getMainLooper()){
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            if (msg.what == GET_TASKS_MESSAGE){
+                taskController.retrieveTasks()
+                sendMessageDelayed(obtainMessage().apply { what = GET_TASKS_MESSAGE }, GET_CONTACTS_INTERVAL)
+            }
+            else {
+                val contactArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    msg.data?.getParcelableArray(EXTRA_TASK_ARRAY, Task::class.java)
+                }
+                else {
+                    msg.data?.getParcelableArray(EXTRA_TASK_ARRAY)
+                }
+                taskList.clear()
+                contactArray?.forEach { taskList.add(it as Task) }
+                taskAdapter.notifyDataSetChanged()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         amb.taskRv.adapter = taskAdapter
         amb.taskRv.layoutManager = LinearLayoutManager(this)
 
-        fillTaskList()
+        getTasksHandler.sendMessageDelayed(Message().apply { what = GET_TASKS_MESSAGE }, GET_CONTACTS_INTERVAL)
     }
 
     private fun getTaskFromIntent(result: ActivityResult) =
@@ -126,15 +158,5 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         taskController.deleteTask(taskList[position])
         taskList.removeAt(position)
         taskAdapter.notifyItemRemoved(position)
-    }
-
-    private fun fillTaskList() {
-        taskList.clear()
-        Thread {
-            taskList.addAll(taskController.retrieveTasks())
-            runOnUiThread {
-                taskAdapter.notifyDataSetChanged()
-            }
-        }.start()
     }
 }
