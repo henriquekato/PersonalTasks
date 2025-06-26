@@ -128,6 +128,10 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
                 createTaskArl.launch(Intent(this, TaskActivity::class.java))
                 true
             }
+            R.id.view_deleted_tasks_mi -> {
+                startActivity(Intent(this, DeletedTasksActivity::class.java))
+                true
+            }
             R.id.sign_out_mi -> {
                 Firebase.auth.signOut()
                 finish()
