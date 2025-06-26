@@ -96,6 +96,11 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
                 createTaskArl.launch(Intent(this, TaskActivity::class.java))
                 true
             }
+            R.id.sign_out_mi -> {
+                Firebase.auth.signOut()
+                finish()
+                true
+            }
             else -> {
                 false
             }

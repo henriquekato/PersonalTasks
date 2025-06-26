@@ -5,4 +5,8 @@
         android:title="@string/add_task"
         app:showAsAction="always"
         android:icon="@drawable/ic_add"/>
+    <item android:id="@+id/sign_out_mi"
+        android:title="Sign out"
+        app:showAsAction="always"
+        android:icon="@drawable/sign_out"/>
 </menu>
