@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
 
     companion object {
         const val GET_TASKS_MESSAGE = 1
-        const val GET_CONTACTS_INTERVAL = 2000L
+        const val GET_TASKS_INTERVAL = 2000L
     }
 
     val getTasksHandler = object: Handler(Looper.getMainLooper()){
@@ -51,17 +51,17 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
             super.handleMessage(msg)
             if (msg.what == GET_TASKS_MESSAGE){
                 taskController.retrieveTasks()
-                sendMessageDelayed(obtainMessage().apply { what = GET_TASKS_MESSAGE }, GET_CONTACTS_INTERVAL)
+                sendMessageDelayed(obtainMessage().apply { what = GET_TASKS_MESSAGE }, GET_TASKS_INTERVAL)
             }
             else {
-                val contactArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val taskArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     msg.data?.getParcelableArray(EXTRA_TASK_ARRAY, Task::class.java)
                 }
                 else {
                     msg.data?.getParcelableArray(EXTRA_TASK_ARRAY)
                 }
                 taskList.clear()
-                contactArray?.forEach { taskList.add(it as Task) }
+                taskArray?.forEach { taskList.add(it as Task) }
                 taskAdapter.notifyDataSetChanged()
             }
         }
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         amb.taskRv.adapter = taskAdapter
         amb.taskRv.layoutManager = LinearLayoutManager(this)
 
-        getTasksHandler.sendMessageDelayed(Message().apply { what = GET_TASKS_MESSAGE }, GET_CONTACTS_INTERVAL)
+        getTasksHandler.sendMessageDelayed(Message().apply { what = GET_TASKS_MESSAGE }, GET_TASKS_INTERVAL)
     }
 
     private fun getTaskFromIntent(result: ActivityResult) =
@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
             }
             R.id.sign_out_mi -> {
                 Firebase.auth.signOut()
+                startActivity(Intent(this, LoginActivity::class.java))
                 finish()
                 true
             }
@@ -162,5 +163,12 @@ class MainActivity : AppCompatActivity(), OnTaskClickListener {
         taskController.deleteTask(taskList[position])
         taskList.removeAt(position)
         taskAdapter.notifyItemRemoved(position)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (Firebase.auth.currentUser == null){
+            finish()
+        }
     }
 }
