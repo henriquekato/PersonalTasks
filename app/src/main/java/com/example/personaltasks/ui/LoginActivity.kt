@@ -28,16 +28,28 @@ class LoginActivity : AppCompatActivity() {
         }
 
         alb.signInBt.setOnClickListener {
+            val email = alb.emailLoginEt.text.toString()
+            val password = alb.passwordLoginEt.text.toString()
+            if(email == "" || password == "") {
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Login failed",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
             val signInCoroutineScope = CoroutineScope(Dispatchers.IO)
             signInCoroutineScope.launch {
                 Firebase.auth.signInWithEmailAndPassword(
-                    alb.emailLoginEt.text.toString(),
-                    alb.passwordLoginEt.text.toString()
+                    email,
+                    password
                 ).addOnFailureListener {
-                    Toast.makeText(this@LoginActivity,
+                    Toast.makeText(
+                        this@LoginActivity,
                         "Login failed",
-                        Toast.LENGTH_SHORT)
-                    .show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }.addOnSuccessListener {
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     finish()
