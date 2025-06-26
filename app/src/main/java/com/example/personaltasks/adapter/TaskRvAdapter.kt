@@ -9,8 +9,6 @@ import com.example.personaltasks.R
 import com.example.personaltasks.databinding.TileTaskBinding
 import com.example.personaltasks.model.Task
 import com.example.personaltasks.ui.OnTaskClickListener
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 class TaskRvAdapter(
     private val taskList: MutableList<Task>,
@@ -61,7 +59,6 @@ class TaskRvAdapter(
                 titleTv.text = task.title
                 descriptionTv.text = task.description
                 dueDateTv.text = task.dueDate
-                    .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
                 isDoneTv.text = "Not done"
                 if(task.isDone) isDoneTv.text = "Done"
             }

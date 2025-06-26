@@ -9,8 +9,6 @@ import com.example.personaltasks.R
 import com.example.personaltasks.databinding.TileTaskBinding
 import com.example.personaltasks.model.Task
 import com.example.personaltasks.ui.OnDeletedTaskClickListener
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 class DeletedTasksRvAdapter(
     private val taskList: MutableList<Task>,
@@ -25,7 +23,7 @@ class DeletedTasksRvAdapter(
         init {
             tcb.root.setOnCreateContextMenuListener{ menu, v, menuInfo ->
                 (onDeletedTaskClickListener as AppCompatActivity).menuInflater
-                    .inflate(R.menu.context_menu_task, menu)
+                    .inflate(R.menu.context_menu_deleted_task, menu)
 
                 menu.findItem(R.id.view_task_mi).setOnMenuItemClickListener {
                     onDeletedTaskClickListener.onViewTask(adapterPosition)
@@ -57,7 +55,6 @@ class DeletedTasksRvAdapter(
                 titleTv.text = task.title
                 descriptionTv.text = task.description
                 dueDateTv.text = task.dueDate
-                    .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
                 isDoneTv.text = "Not done"
                 if(task.isDone) isDoneTv.text = "Done"
             }
