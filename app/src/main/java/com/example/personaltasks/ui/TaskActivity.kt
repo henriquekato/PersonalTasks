@@ -17,6 +17,8 @@ class TaskActivity : AppCompatActivity() {
         ActivityTaskBinding.inflate(layoutInflater)
     }
 
+    private var selectedPriority = "Alta"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(atb.root)
@@ -47,7 +49,8 @@ class TaskActivity : AppCompatActivity() {
                     descriptionEt.text.toString(),
                     LocalDate.of(dueDateDp.year, dueDateDp.month, dueDateDp.dayOfMonth).toString(),
                     isDoneCb.isChecked,
-                    false
+                    false,
+                    selectedPriority
                 ).let { task ->
                     Intent().apply {
                         putExtra(EXTRA_TASK, task)
@@ -60,6 +63,24 @@ class TaskActivity : AppCompatActivity() {
 
         atb.cancelBt.setOnClickListener {
             finish()
+        }
+
+        with(atb){
+            highPriorityRb.setOnClickListener {
+                mediumPriorityRb.isChecked = false
+                lowPriorityRb.isChecked = false
+                selectedPriority = "Alta"
+            }
+            mediumPriorityRb.setOnClickListener {
+                highPriorityRb.isChecked = false
+                lowPriorityRb.isChecked = false
+                selectedPriority = "Média"
+            }
+            lowPriorityRb.setOnClickListener {
+                highPriorityRb.isChecked = false
+                mediumPriorityRb.isChecked = false
+                selectedPriority = "Baixa"
+            }
         }
     }
 
@@ -79,6 +100,24 @@ class TaskActivity : AppCompatActivity() {
             localDate.dayOfMonth
         )
         isDoneCb.isChecked = task.isDone
+        when(task.priority){
+            "Alta" -> {
+                highPriorityRb.isChecked = true
+                mediumPriorityRb.isChecked = false
+                lowPriorityRb.isChecked = false
+            }
+            "Média" -> {
+                mediumPriorityRb.isChecked = true
+                highPriorityRb.isChecked = false
+                lowPriorityRb.isChecked = false
+            }
+            "Baixa" -> {
+                lowPriorityRb.isChecked = true
+                highPriorityRb.isChecked = false
+                mediumPriorityRb.isChecked = false
+            }
+        }
+        selectedPriority = task.priority
     }
 
     private fun isViewMode() = intent.getBooleanExtra(EXTRA_VIEW_TASK, false)
@@ -89,5 +128,8 @@ class TaskActivity : AppCompatActivity() {
         dueDateDp.isEnabled = false
         saveBt.visibility = View.GONE
         isDoneCb.isEnabled = false
+        highPriorityRb.isEnabled = false
+        mediumPriorityRb.isEnabled = false
+        lowPriorityRb.isEnabled = false
     }
 }

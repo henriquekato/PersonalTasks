@@ -64,6 +64,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/due_date_dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prioridade"
+            app:layout_constraintTop_toBottomOf="@id/is_done_cb"
+            android:id="@+id/priority_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/high_priority_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Alta"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/priority_tv"
+            android:checked="true"/>
+        <CheckBox
+            android:id="@+id/medium_priority_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Média"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/high_priority_rb" />
+        <CheckBox
+            android:id="@+id/low_priority_rb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Baixa"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/medium_priority_rb" />
+
         <Button
             android:id="@+id/save_bt"
             android:layout_width="wrap_content"
@@ -71,7 +106,7 @@
             android:text="@string/save"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/cancel_bt"
-            app:layout_constraintTop_toBottomOf="@+id/is_done_cb" />
+            app:layout_constraintTop_toBottomOf="@+id/low_priority_rb" />
 
         <Button
             android:id="@+id/cancel_bt"
@@ -80,7 +115,7 @@
             android:text="@string/cancel"
             app:layout_constraintLeft_toRightOf="@+id/save_bt"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/is_done_cb" />
+            app:layout_constraintTop_toBottomOf="@+id/low_priority_rb" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
